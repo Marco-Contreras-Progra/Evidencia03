@@ -1,5 +1,7 @@
 package com.jurgo;
 
+import java.util.Random;
+import java.util.Scanner;
 
 public class Juego {
     public static void main(String[] args) {
@@ -16,8 +18,17 @@ public class Juego {
 
         imprimirMapa(mapa);
 
-    }
+        Scanner scanner = new Scanner(System.in);
+        Random random = new Random();
 
+        while (true) {
+            imprimirMapa(mapa);
+            System.out.print("Ingrese movimiento (w/a/s/d): ");
+            char movimiento = scanner.next().charAt(0);
+            realizarMovimiento(mapa, movimiento, personaje);
+        }
+
+    }
 
     
     public static String[][] crearMapa() {
@@ -64,4 +75,43 @@ public class Juego {
         int y = entidad[1];
         mapa[x][y] = simbolo;  
     }
+    private static void realizarMovimiento(String[][] mapa, char movimiento, int[] personaje) {
+        int nuevaX = personaje[0];
+        int nuevaY = personaje[1];
+
+        if (movimiento == 'w') {
+            nuevaX--;
+        } else if (movimiento == 's') {
+            nuevaX++;
+        } else if (movimiento == 'a') {
+            nuevaY--;
+        } else if (movimiento == 'd') {
+            nuevaY++;
+        } else {
+            System.out.println("Movimiento inválido");
+            return;
+        } if (esMovimientoValido(mapa, nuevaX, nuevaY)){
+            moverPersonaje(mapa, nuevaX, nuevaY, personaje);
+        }
+    }
+    private static boolean esMovimientoValido(String[][] mapa, int nuevaX, int nuevaY){
+        if (nuevaX < 0 || nuevaX >= mapa.length || nuevaY < 0 || nuevaY >= mapa[0].length) {
+            System.out.println("Movimiento fuera de los limites");
+            return false;
+        } else if (mapa[nuevaX][nuevaY].equals("#")){
+            System.out.println("No puedes atravesar un obstáculo");
+            return false;
+        }
+        return true;
+    }
+    private static void moverPersonaje(String[][]mapa, int nuevaX, int nuevaY, int[] personaje) {
+        mapa[personaje[0]][personaje[1]]=".";
+        personaje[0] = nuevaX;
+        personaje[1] = nuevaY;
+        colocarEntidad(mapa, personaje, "P");
+    }
 }
+
+
+    
+
